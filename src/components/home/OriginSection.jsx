@@ -1,8 +1,11 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useLanguage } from "../../i18n/LanguageContext";
+import { Trees, HeartHandshake, Brain } from "lucide-react";
+import arakuImg from "../../assets/images/araku_valley.jpg";
 
 /* =========================================================
-   BREAKPOINT HOOK (INLINE-STYLES SAFE)
+   BREAKPOINT HOOK
 ========================================================= */
 
 const useBreakpoint = () => {
@@ -26,10 +29,12 @@ const useBreakpoint = () => {
 
 const OriginSection = () => {
   const { isMobile, isTablet } = useBreakpoint();
+  const { t } = useLanguage();
 
   return (
     <section style={styles.wrapper}>
-      <div style={styles.backgroundPattern} />
+      <div style={styles.backgroundGradient} />
+      <div style={styles.particleLayer} />
 
       <div
         style={{
@@ -41,25 +46,28 @@ const OriginSection = () => {
       >
         {/* LEFT CONTENT */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.9, ease: [0.19, 1, 0.22, 1] }}
-          style={{ ...styles.content, maxWidth: isTablet ? "100%" : "560px" }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          style={{ maxWidth: isTablet ? "100%" : "560px" }}
         >
-          <motion.span style={styles.eyebrow}>✦ Our Origin Story</motion.span>
+          <span style={styles.eyebrow}>
+            <span style={styles.dot}>●</span>
+            {t("origin.eyebrow")}
+          </span>
 
           <h2
             style={{
               ...styles.title,
               fontSize: isMobile
                 ? "clamp(1.9rem, 7vw, 2.6rem)"
-                : "clamp(2.2rem, 4vw, 3.5rem)",
+                : "clamp(2.4rem, 4vw, 3.6rem)",
             }}
           >
-            Rooted in Araku.
+            {t("origin.titleMain")}
             <br />
-            <span style={styles.titleAccent}>Sustained by Trust.</span>
+            <span style={styles.titleAccent}>{t("origin.titleAccent")}</span>
           </h2>
 
           <p
@@ -68,39 +76,36 @@ const OriginSection = () => {
               fontSize: isMobile ? "0.95rem" : "1.05rem",
             }}
           >
-            AT Millets began in the tribal highlands of Araku Valley, where
-            ancient grains have been cultivated for generations. We work
-            directly with indigenous farmers — building long-term partnerships
-            that respect land, people, and tradition.
+            {t("origin.description")}
           </p>
 
-          <div style={{ ...styles.pillars, gap: isMobile ? "12px" : "16px" }}>
+          <div style={{ ...styles.pillars, gap: isMobile ? 12 : 16 }}>
             {[
               {
-                icon: "🌾",
-                title: "Direct Sourcing",
-                desc: "No middlemen. Transparent procurement at fair prices.",
+                icon: <Trees />,
+                title: t("origin.pillars.direct.title"),
+                desc: t("origin.pillars.direct.desc"),
               },
               {
-                icon: "🤝",
-                title: "Tribal Partnerships",
-                desc: "Long-term collaboration with farming communities.",
+                icon: <HeartHandshake />,
+                title: t("origin.pillars.partnership.title"),
+                desc: t("origin.pillars.partnership.desc"),
               },
               {
-                icon: "📿",
-                title: "Indigenous Knowledge",
-                desc: "Farming methods preserved, not replaced.",
+                icon: <Brain />,
+                title: t("origin.pillars.knowledge.title"),
+                desc: t("origin.pillars.knowledge.desc"),
               },
-            ].map((pillar, index) => (
+            ].map((pillar, i) => (
               <motion.div
-                key={index}
+                key={i}
                 style={{
                   ...styles.pillar,
                   padding: isMobile ? "16px 20px" : "20px 24px",
                 }}
                 whileHover={{
-                  scale: 1.02,
-                  boxShadow: "0 8px 24px rgba(139,115,85,0.15)",
+                  translateY: -4,
+                  boxShadow: "0 10px 30px rgba(60,139,101,0.15)",
                 }}
               >
                 <div style={styles.pillarIcon}>{pillar.icon}</div>
@@ -115,55 +120,57 @@ const OriginSection = () => {
           <div
             style={{
               ...styles.badge,
-              padding: isMobile ? "8px 16px" : "10px 20px",
+              padding: isMobile ? "8px 16px" : "10px 22px",
             }}
           >
-            <span style={styles.badgeText}>
-              Empowering 1000+ tribal families since 2020
-            </span>
+            {t("origin.badge")}
           </div>
         </motion.div>
 
         {/* RIGHT VISUAL */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, rotateZ: -5 }}
-          whileInView={{ opacity: 1, scale: 1, rotateZ: 0 }}
+          initial={{ opacity: 0, scale: 0.94 }}
+          whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
           style={{
             ...styles.visual,
-            height: isMobile ? "340px" : isTablet ? "400px" : "500px",
+            height: isMobile ? "320px" : isTablet ? "420px" : "520px",
           }}
         >
-          {!isMobile && (
-            <motion.div
-              style={{
-                ...styles.visualRing,
-                width: isTablet ? "320px" : "420px",
-                height: isTablet ? "320px" : "420px",
-              }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-            >
-              <div style={styles.ringDot1} />
-              <div style={styles.ringDot2} />
-              <div style={styles.ringDot3} />
-            </motion.div>
-          )}
-
-          <div
+          <motion.div
             style={{
-              ...styles.visualInner,
-              width: isMobile ? "260px" : isTablet ? "300px" : "360px",
-              height: isMobile ? "260px" : isTablet ? "300px" : "360px",
+              ...styles.imageWrapper,
+              width: isMobile ? "240px" : isTablet ? "300px" : "360px",
+              height: isMobile ? "240px" : isTablet ? "300px" : "360px",
             }}
+            initial="rest"
+            whileHover="hover"
+            animate="rest"
           >
-            <div style={styles.visualContent}>
-              <span style={styles.visualText}>Araku Valley</span>
-              <span style={styles.visualSubtext}>Andhra Pradesh</span>
-              <div style={styles.coordinates}>18°19'N 82°52'E</div>
+            {/* IMAGE */}
+            <img src={arakuImg} alt="Araku Valley" style={styles.image} />
+
+            {/* GOLD PULSATING RINGS */}
+            <div style={styles.goldRingsContainer}>
+              {[0, 1, 2, 3, 4, 5].map((i) => (
+                <motion.div
+                  key={i}
+                  style={styles.goldRing}
+                  animate={{
+                    opacity: [0.15, 0.45, 0.15],
+                    scale: [0.98 + i * 0.06, 1.04 + i * 0.06, 0.98 + i * 0.06],
+                  }}
+                  transition={{
+                    duration: 4.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: i * 0.9,
+                  }}
+                />
+              ))}
             </div>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>
@@ -173,191 +180,151 @@ const OriginSection = () => {
 export default OriginSection;
 
 /* =========================================================
-   STYLES (UNCHANGED DESIGN)
+   STYLES
 ========================================================= */
 
 const styles = {
   wrapper: {
     position: "relative",
-    background:
-      "linear-gradient(180deg, #f8f4ed 0%, #f5efe3 50%, #f0e8db 100%)",
-    padding: "140px 0",
+    background: "linear-gradient(180deg,#ffffff 0%,#f9fdfb 50%,#f2faf6 100%)",
+    padding: "160px 0",
     overflow: "hidden",
   },
 
-  backgroundPattern: {
+  backgroundGradient: {
     position: "absolute",
     inset: 0,
-    background: `
-      radial-gradient(circle at 20% 30%, rgba(212,184,150,0.08), transparent 40%),
-      radial-gradient(circle at 80% 70%, rgba(245,236,215,0.1), transparent 40%)
-    `,
-    pointerEvents: "none",
+    background:
+      "radial-gradient(circle at 20% 30%, rgba(120,194,154,0.18), transparent 50%), radial-gradient(circle at 80% 70%, rgba(60,139,101,0.14), transparent 55%)",
+  },
+
+  particleLayer: {
+    position: "absolute",
+    inset: 0,
+    background:
+      "repeating-linear-gradient(45deg, rgba(120,194,154,0.04) 0 2px, transparent 2px 14px)",
+    opacity: 0.25,
   },
 
   container: {
     position: "relative",
-    maxWidth: "1280px",
+    maxWidth: 1280,
     margin: "0 auto",
     display: "grid",
     alignItems: "center",
+    zIndex: 2,
   },
-
-  content: {},
 
   eyebrow: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 8,
     fontSize: "0.7rem",
-    letterSpacing: "0.2em",
+    letterSpacing: "0.25em",
     textTransform: "uppercase",
-    color: "#8b7355",
+    color: "#3c8b65",
     fontWeight: 600,
-    marginBottom: "20px",
-    padding: "8px 18px",
-    borderRadius: "30px",
-    background: "rgba(212,184,150,0.12)",
-    border: "1px solid rgba(139,115,85,0.2)",
-    display: "inline-block",
+    marginBottom: 24,
+    padding: "8px 20px",
+    background: "rgba(60,139,101,0.08)",
+    borderRadius: 50,
+    border: "1px solid rgba(60,139,101,0.15)",
   },
 
+  dot: { fontSize: "0.5rem", color: "#78c29a" },
+
   title: {
-    fontWeight: 800,
-    lineHeight: 1.15,
-    color: "#2a1f15",
-    marginBottom: "24px",
+    fontWeight: 900,
+    lineHeight: 1.1,
+    color: "#0d2817",
+    marginBottom: 28,
+    letterSpacing: "-0.02em",
   },
 
   titleAccent: {
-    background: "linear-gradient(135deg, #8b7355, #d4b896)",
+    background: "linear-gradient(135deg,#3c8b65,#78c29a)",
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
   },
 
   text: {
     lineHeight: 1.8,
-    color: "#5a4a3a",
-    marginBottom: "40px",
+    color: "#3f5f4f",
+    marginBottom: 44,
   },
 
   pillars: {
     display: "grid",
-    marginBottom: "32px",
+    marginBottom: 36,
   },
 
   pillar: {
     display: "flex",
-    gap: "16px",
-    borderRadius: "16px",
-    background: "rgba(255,255,255,0.7)",
-    border: "1px solid rgba(139,115,85,0.12)",
+    gap: 16,
+    borderRadius: 18,
+    background: "rgba(255,255,255,0.75)",
+    border: "1px solid rgba(60,139,101,0.12)",
     backdropFilter: "blur(10px)",
-    cursor: "pointer",
   },
 
-  pillarIcon: {
-    fontSize: "1.8rem",
-  },
+  pillarIcon: { fontSize: "1.6rem" },
 
   pillarTitle: {
     fontSize: "1rem",
     fontWeight: 700,
-    color: "#2a1f15",
+    color: "#0d2817",
   },
 
   pillarDesc: {
     fontSize: "0.9rem",
-    color: "#6b5a4a",
+    color: "#5f8f75",
   },
 
   badge: {
     display: "inline-flex",
     alignItems: "center",
-    background: "linear-gradient(135deg, #8b7355, #6b5a3f)",
-    borderRadius: "30px",
-    boxShadow: "0 4px 12px rgba(139,115,85,0.25)",
-  },
-
-  badgeText: {
+    background: "linear-gradient(135deg,#3c8b65,#2d7a54)",
+    color: "#ffffff",
+    borderRadius: 30,
     fontSize: "0.85rem",
-    color: "#fff",
     fontWeight: 600,
+    boxShadow: "0 6px 18px rgba(60,139,101,0.3)",
   },
 
   visual: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  imageWrapper: {
     position: "relative",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    borderRadius: "50%",
+    overflow: "visible",
   },
 
-  visualRing: {
+  image: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    borderRadius: "50%",
+    display: "block",
+    boxShadow: "0 18px 50px rgba(60,139,101,0.28)",
+  },
+  goldRingsContainer: {
     position: "absolute",
-    borderRadius: "50%",
-    border: "2px dashed rgba(139,115,85,0.2)",
+    inset: -14,
+    pointerEvents: "none",
   },
 
-  ringDot1: {
+  goldRing: {
     position: "absolute",
-    top: "10%",
-    right: "20%",
-    width: "8px",
-    height: "8px",
+    inset: 0,
     borderRadius: "50%",
-    background: "#d4b896",
-  },
-
-  ringDot2: {
-    position: "absolute",
-    bottom: "25%",
-    left: "15%",
-    width: "6px",
-    height: "6px",
-    borderRadius: "50%",
-    background: "#8b7355",
-  },
-
-  ringDot3: {
-    position: "absolute",
-    top: "50%",
-    left: "10%",
-    width: "10px",
-    height: "10px",
-    borderRadius: "50%",
-    background: "#e8dcc4",
-  },
-
-  visualInner: {
-    borderRadius: "50%",
-    background: "linear-gradient(135deg, #f5ecd7, #e8dcc4, #d8cbb2)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    border: "3px solid rgba(255,255,255,0.8)",
-    boxShadow:
-      "0 20px 60px rgba(139,115,85,0.25), inset 0 2px 10px rgba(255,255,255,0.5)",
-  },
-
-  visualContent: {
-    textAlign: "center",
-    display: "flex",
-    flexDirection: "column",
-    gap: "8px",
-  },
-
-  visualText: {
-    fontWeight: 700,
-    letterSpacing: "0.08em",
-    textTransform: "uppercase",
-    color: "#2a1f15",
-  },
-
-  visualSubtext: {
-    fontSize: "0.85rem",
-    color: "#6b5a3f",
-    fontWeight: 600,
-  },
-
-  coordinates: {
-    fontSize: "0.75rem",
-    color: "#8b7355",
+    padding: 2,
+    background: "linear-gradient(135deg,#c9a24d,#f1d58a,#c9a24d)",
+    WebkitMask:
+      "radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 2px))",
+    mask: "radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 2px))",
   },
 };

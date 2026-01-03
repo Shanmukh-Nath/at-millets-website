@@ -1,373 +1,81 @@
-import {
-  motion,
-  useMotionValue,
-  useTransform,
-  useSpring,
-  useInView,
-} from "framer-motion";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useRef, useMemo, useEffect } from "react";
-import * as THREE from "three";
-import Button from "../../components/common/Button";
+import { motion, useInView } from "framer-motion";
+import { useMediaQuery } from "react-responsive";
+import { useRef } from "react";
+import { useLanguage } from "../../i18n/LanguageContext";
 
-/* =========================================================
-   ANIMATED COUNTER COMPONENT
-========================================================= */
+// Mock Button component
+const Button = ({ children, size, variant, fullWidth }) => (
+  <button
+    style={{
+      padding: size === "lg" ? "16px 40px" : "12px 28px",
+      fontSize: size === "lg" ? "1.05rem" : "0.95rem",
+      fontWeight: 600,
+      border: variant === "secondary" ? "2px solid #3c8b65" : "none",
+      background:
+        variant === "secondary"
+          ? "transparent"
+          : "linear-gradient(135deg, #3c8b65 0%, #2d7a54 100%)",
+      color: variant === "secondary" ? "#3c8b65" : "#fffef9",
+      borderRadius: 12,
+      cursor: "pointer",
+      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+      width: fullWidth ? "100%" : "auto",
+      boxShadow:
+        variant === "secondary"
+          ? "none"
+          : "0 4px 20px rgba(60, 139, 101, 0.25)",
+    }}
+    onMouseEnter={(e) => {
+      e.target.style.transform = "translateY(-2px)";
+      e.target.style.boxShadow =
+        variant === "secondary"
+          ? "0 4px 16px rgba(60, 139, 101, 0.15)"
+          : "0 8px 30px rgba(60, 139, 101, 0.35)";
+    }}
+    onMouseLeave={(e) => {
+      e.target.style.transform = "translateY(0)";
+      e.target.style.boxShadow =
+        variant === "secondary"
+          ? "none"
+          : "0 4px 20px rgba(60, 139, 101, 0.25)";
+    }}
+  >
+    {children}
+  </button>
+);
 
-const AnimatedCounter = ({ value, suffix = "", duration = 2 }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
-  const motionValue = useMotionValue(0);
-  const springValue = useSpring(motionValue, {
-    damping: 50,
-    stiffness: 100,
-  });
-  const display = useTransform(springValue, (latest) => {
-    return Math.floor(latest).toLocaleString() + suffix;
-  });
-
-  useEffect(() => {
-    if (isInView) {
-      motionValue.set(value);
-    }
-  }, [isInView, motionValue, value]);
-
-  return <motion.span ref={ref}>{display}</motion.span>;
-};
-
-/* =========================================================
-   FLOWING ORGANIC WAVES - LIVING ECOSYSTEM VISUALIZATION
-========================================================= */
-
-function OrganicWaves() {
-  const meshRef = useRef();
-  const materialRef = useRef();
-
-  // Create flowing wave geometry
-  const geometry = useMemo(() => {
-    const geo = new THREE.PlaneGeometry(20, 12, 100, 60);
-    return geo;
-  }, []);
-
-  useFrame(({ clock }) => {
-    if (!meshRef.current) return;
-
-    const time = clock.getElapsedTime();
-    const positions = meshRef.current.geometry.attributes.position;
-
-    // Create multiple wave patterns that flow organically
-    for (let i = 0; i < positions.count; i++) {
-      const x = positions.getX(i);
-      const y = positions.getY(i);
-
-      // Layered wave motion - like grain fields in wind
-      const wave1 = Math.sin(x * 0.5 + time * 0.8) * 0.3;
-      const wave2 = Math.sin(y * 0.7 - time * 0.6) * 0.25;
-      const wave3 = Math.sin((x + y) * 0.3 + time * 0.5) * 0.35;
-      const ripple =
-        Math.sin(Math.sqrt(x * x + y * y) * 0.4 - time * 1.2) * 0.2;
-
-      const z = wave1 + wave2 + wave3 + ripple;
-      positions.setZ(i, z);
-    }
-
-    positions.needsUpdate = true;
-    meshRef.current.geometry.computeVertexNormals();
-
-    // Subtle rotation for depth
-    meshRef.current.rotation.z = Math.sin(time * 0.1) * 0.05;
-
-    // Color shift over time
-    if (materialRef.current) {
-      const hue = 0.15 + Math.sin(time * 0.2) * 0.05;
-      materialRef.current.color.setHSL(hue, 0.35, 0.65);
-    }
-  });
-
-  return (
-    <mesh
-      ref={meshRef}
-      geometry={geometry}
-      rotation={[-0.3, 0, 0]}
-      position={[0, -1, -3]}
-    >
-      <meshStandardMaterial
-        ref={materialRef}
-        color="#d4b896"
-        wireframe={false}
-        side={THREE.DoubleSide}
-        roughness={0.8}
-        metalness={0.2}
-      />
-    </mesh>
-  );
-}
-
-// Floating organic particles - seeds dispersing
-function FloatingSeeds() {
-  const count = 150;
-  const meshRef = useRef();
-
-  const particles = useMemo(() => {
-    const temp = [];
-    for (let i = 0; i < count; i++) {
-      temp.push({
-        position: [
-          (Math.random() - 0.5) * 15,
-          (Math.random() - 0.5) * 10,
-          (Math.random() - 0.5) * 8,
-        ],
-        speed: 0.2 + Math.random() * 0.5,
-        phase: Math.random() * Math.PI * 2,
-        size: 0.02 + Math.random() * 0.04,
-      });
-    }
-    return temp;
-  }, []);
-
-  useFrame(({ clock }) => {
-    if (!meshRef.current) return;
-
-    particles.forEach((particle, i) => {
-      const t = clock.getElapsedTime() * particle.speed + particle.phase;
-      const child = meshRef.current.children[i];
-      if (child) {
-        child.position.y += Math.sin(t) * 0.002;
-        child.position.x += Math.cos(t * 0.7) * 0.001;
-        child.rotation.x = t * 0.5;
-        child.rotation.y = t * 0.3;
-      }
-    });
-  });
-
-  return (
-    <group ref={meshRef}>
-      {particles.map((p, i) => (
-        <mesh key={i} position={p.position}>
-          <sphereGeometry args={[p.size, 6, 6]} />
-          <meshStandardMaterial
-            color={
-              i % 3 === 0 ? "#8b5a3c" : i % 3 === 1 ? "#d4b896" : "#f5ecd7"
-            }
-            roughness={0.8}
-            metalness={0.1}
-          />
-        </mesh>
-      ))}
-    </group>
-  );
-}
-
-// Glowing ambient light spheres - representing natural energy
-function EnergyOrbs() {
-  const orbs = useMemo(
-    () => [
-      { position: [-4, 2, -4], size: 0.6, color: "#f5ecd7", intensity: 0.6 },
-      { position: [5, -1, -5], size: 0.8, color: "#d4b896", intensity: 0.5 },
-      { position: [-2, -2, -3], size: 0.5, color: "#e8dcc4", intensity: 0.4 },
-    ],
-    []
-  );
-
-  return (
-    <>
-      {orbs.map((orb, i) => (
-        <group key={i} position={orb.position}>
-          <mesh>
-            <sphereGeometry args={[orb.size, 32, 32]} />
-            <meshBasicMaterial color={orb.color} transparent opacity={0.15} />
-          </mesh>
-          <pointLight
-            color={orb.color}
-            intensity={orb.intensity}
-            distance={8}
-          />
-        </group>
-      ))}
-    </>
-  );
-}
-
-/* =========================================================
-   INTERACTIVE REVEAL EFFECT
-========================================================= */
-
-const InteractiveReveal = ({ children }) => {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const rotateX = useTransform(y, [-300, 300], [5, -5]);
-  const rotateY = useTransform(x, [-300, 300], [-5, 5]);
-
-  const handleMouse = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    x.set(e.clientX - centerX);
-    y.set(e.clientY - centerY);
-  };
-
-  return (
-    <motion.div
-      style={{
-        ...styles.content,
-        perspective: 1000,
-      }}
-      onMouseMove={handleMouse}
-      onMouseLeave={() => {
-        x.set(0);
-        y.set(0);
-      }}
-    >
-      <motion.div
-        style={{
-          rotateX,
-          rotateY,
-          transformStyle: "preserve-3d",
-        }}
-      >
-        {children}
-      </motion.div>
-    </motion.div>
-  );
-};
+// Mock translation function
 
 /* =========================================================
    HERO SECTION
 ========================================================= */
 
 const HeroSection = () => {
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+  const { t } = useLanguage();
+
   return (
     <section style={styles.wrapper}>
-      {/* Flowing Organic Background */}
-      <Canvas camera={{ position: [0, 0, 6], fov: 60 }} style={styles.canvas}>
-        {/* Gradient background */}
-        <color attach="background" args={["#f8f4ed"]} />
-        <fog attach="fog" args={["#f8f4ed", 5, 15]} />
+      {/* Layered backgrounds */}
+      <div style={styles.backgroundGradient} />
+      <FloatingOrbs />
+      <ParticleBackground />
 
-        {/* Soft ambient lighting */}
-        <ambientLight intensity={0.6} />
-        <directionalLight
-          position={[5, 5, 5]}
-          intensity={0.8}
-          color="#fffbf5"
-        />
-        <directionalLight
-          position={[-3, 2, -2]}
-          intensity={0.4}
-          color="#f5ecd7"
-        />
+      {isMobile ? <MobileHero t={t} /> : <DesktopHero t={t} />}
 
-        {/* Organic elements */}
-        <OrganicWaves />
-        <FloatingSeeds />
-        <EnergyOrbs />
-      </Canvas>
-
-      {/* Animated gradient overlay */}
-      <motion.div
-        style={styles.gradientOverlay}
-        animate={{
-          background: [
-            "radial-gradient(circle at 20% 50%, rgba(212,184,150,0.1) 0%, transparent 50%)",
-            "radial-gradient(circle at 80% 50%, rgba(245,236,215,0.15) 0%, transparent 50%)",
-            "radial-gradient(circle at 20% 50%, rgba(212,184,150,0.1) 0%, transparent 50%)",
-          ],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-
-      {/* Interactive Content with 3D tilt */}
-      <InteractiveReveal>
-        <motion.div
-          initial={{ opacity: 0, y: 40, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 1.4, ease: [0.19, 1, 0.22, 1] }}
+      {/* Bottom wave decoration */}
+      <div style={styles.waveDecor}>
+        <svg
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+          style={styles.waveSvg}
         >
-          <motion.span
-            style={styles.eyebrow}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-          >
-            From the Hills of Araku
-          </motion.span>
-
-          <motion.h1
-            style={styles.title}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 1 }}
-          >
-            Where Ancient Wisdom
-            <br />
-            <span style={styles.titleAccent}>Meets Modern Wellness</span>
-          </motion.h1>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 1 }}
-          >
-            <p style={styles.subtitle}>
-              Experience the living rhythm of nature through our
-              climate-resilient millets — sourced transparently from indigenous
-              farmers, nurtured by tradition, and crafted for your conscious
-              lifestyle.
-            </p>
-          </motion.div>
-
-          <motion.div
-            style={styles.statsContainer}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.8 }}
-          >
-            <div style={styles.stat}>
-              <div style={styles.statNumber}>1000+</div>
-              <div style={styles.statLabel}>Farmer Partners</div>
-            </div>
-            <div style={styles.stat}>
-              <div style={styles.statNumber}>8</div>
-              <div style={styles.statLabel}>Ancient Varieties</div>
-            </div>
-            <div style={styles.stat}>
-              <div style={styles.statNumber}>100%</div>
-              <div style={styles.statLabel}>Organic Process</div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            style={styles.actions}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2, duration: 0.8 }}
-          >
-            <Button size="lg">Explore Our Range</Button>
-            <Button variant="secondary" size="lg">
-              Partner With Us
-            </Button>
-          </motion.div>
-        </motion.div>
-      </InteractiveReveal>
-
-      {/* Scroll indicator */}
-      <motion.div
-        style={styles.scrollIndicator}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, y: [0, 10, 0] }}
-        transition={{
-          opacity: { delay: 2, duration: 0.5 },
-          y: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
-        }}
-      >
-        <div style={styles.scrollLine} />
-        <span style={styles.scrollText}>Scroll to discover</span>
-      </motion.div>
+          <path
+            d="M0,50 Q300,10 600,50 T1200,50 L1200,120 L0,120 Z"
+            fill="rgba(244, 250, 246, 0.8)"
+          />
+        </svg>
+      </div>
     </section>
   );
 };
@@ -375,141 +83,558 @@ const HeroSection = () => {
 export default HeroSection;
 
 /* =========================================================
-   INLINE STYLES
+   FLOATING ORBS (OPTIMIZED)
+========================================================= */
+
+const FloatingOrbs = () => {
+  return (
+    <div style={styles.orbContainer}>
+      <motion.div
+        style={{ ...styles.orb, ...styles.orb1 }}
+        animate={{
+          y: [0, -40, 0],
+          x: [0, 30, 0],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      <motion.div
+        style={{ ...styles.orb, ...styles.orb2 }}
+        animate={{
+          y: [0, 50, 0],
+          x: [0, -40, 0],
+          scale: [1, 1.15, 1],
+        }}
+        transition={{
+          duration: 25,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      <motion.div
+        style={{ ...styles.orb, ...styles.orb3 }}
+        animate={{
+          y: [0, -30, 0],
+          x: [0, 20, 0],
+          scale: [1, 1.05, 1],
+        }}
+        transition={{
+          duration: 18,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+    </div>
+  );
+};
+
+/* =========================================================
+   PARTICLE BACKGROUND (REDUCED COUNT)
+========================================================= */
+
+const ParticleBackground = () => {
+  const particles = Array.from({ length: 35 });
+
+  return (
+    <div style={styles.particleLayer}>
+      {particles.map((_, i) => {
+        const size = 12 + (i % 4) * 6; // Varying sizes: 12, 18, 24, 30px
+        return (
+          <motion.div
+            key={i}
+            style={{
+              ...styles.particle,
+              width: size,
+              height: size,
+              left: `${(i * 7) % 100}%`,
+              top: `${(i * 11) % 100}%`,
+            }}
+            animate={{
+              y: [0, -40, 0],
+              rotate: [0, 360, 0],
+              opacity: [0.3, 0.7, 0.3],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 12 + (i % 6),
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: i * 0.1,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
+/* =========================================================
+   DESKTOP HERO
+========================================================= */
+
+const DesktopHero = ({ t }) => {
+  return (
+    <motion.div
+      style={styles.desktopContent}
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.8 }}
+      >
+        <span style={styles.eyebrow}>
+          <span style={styles.eyebrowDot}>●</span>
+          {t("hero.eyebrow")}
+        </span>
+      </motion.div>
+
+      <motion.h1
+        style={styles.title}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.8 }}
+      >
+        {t("hero.titleMain")}
+        <br />
+        <span style={styles.titleAccent}>
+          {t("hero.titleAccent")}
+          <span style={styles.accentUnderline} />
+        </span>
+      </motion.h1>
+
+      <motion.p
+        style={styles.subtitle}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.8 }}
+      >
+        {t("hero.subtitle")}
+      </motion.p>
+
+      <motion.div
+        style={styles.statsRow}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.7, duration: 0.8 }}
+      >
+        <Stat value="1000+" label={t("hero.stats.farmers")} delay={0} />
+        <Stat value="8" label={t("hero.stats.varieties")} delay={0.1} />
+        <Stat value="100%" label={t("hero.stats.organic")} delay={0.2} />
+      </motion.div>
+
+      <motion.div
+        style={styles.actions}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.9, duration: 0.8 }}
+      >
+        <Button size="lg">{t("hero.actions.explore")}</Button>
+        <Button size="lg" variant="secondary">
+          {t("hero.actions.partner")}
+        </Button>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+/* =========================================================
+   MOBILE HERO
+========================================================= */
+
+const MobileHero = ({ t }) => {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
+
+  return (
+    <motion.div
+      ref={ref}
+      style={styles.mobileContent}
+      initial={{ opacity: 0 }}
+      animate={inView ? { opacity: 1 } : {}}
+      transition={{ duration: 0.9 }}
+    >
+      <motion.span
+        style={styles.mobileEyebrow}
+        initial={{ opacity: 0, y: 20 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ delay: 0.2, duration: 0.6 }}
+      >
+        <span style={styles.eyebrowDot}>●</span>
+        {t("hero.eyebrow")}
+      </motion.span>
+
+      <motion.h1
+        style={styles.mobileTitle}
+        initial={{ opacity: 0, y: 20 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ delay: 0.3, duration: 0.7 }}
+      >
+        {t("hero.titleMain")}
+        <br />
+        <span style={styles.titleAccent}>{t("hero.titleAccent")}</span>
+      </motion.h1>
+
+      <motion.p
+        style={styles.mobileSubtitle}
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ delay: 0.5, duration: 0.7 }}
+      >
+        {t("hero.subtitle")}
+      </motion.p>
+
+      <motion.div
+        style={styles.mobileStats}
+        initial={{ opacity: 0, y: 20 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ delay: 0.6, duration: 0.7 }}
+      >
+        <MobileStat value="1000+" label={t("hero.stats.farmers")} />
+        <MobileStat value="8" label={t("hero.stats.varieties")} />
+        <MobileStat value="100%" label={t("hero.stats.organic")} />
+      </motion.div>
+
+      <motion.div
+        style={styles.mobileActions}
+        initial={{ opacity: 0, y: 20 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ delay: 0.8, duration: 0.7 }}
+      >
+        <Button fullWidth>{t("hero.actions.explore")}</Button>
+        <Button fullWidth variant="secondary">
+          {t("hero.actions.partner")}
+        </Button>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+/* =========================================================
+   STATS WITH ANIMATION
+========================================================= */
+
+const Stat = ({ value, label, delay }) => {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
+
+  return (
+    <motion.div
+      ref={ref}
+      style={styles.stat}
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={inView ? { opacity: 1, scale: 1 } : {}}
+      transition={{ delay: delay + 0.7, duration: 0.5 }}
+    >
+      <div style={styles.statCard}>
+        <div style={styles.statValue}>{value}</div>
+        <div style={styles.statLabel}>{label}</div>
+      </div>
+    </motion.div>
+  );
+};
+
+const MobileStat = ({ value, label }) => (
+  <div style={styles.mobileStat}>
+    <div style={styles.mobileStatCard}>
+      <strong style={styles.mobileStatValue}>{value}</strong>
+      <span style={styles.mobileStatLabel}>{label}</span>
+    </div>
+  </div>
+);
+
+/* =========================================================
+   STYLES
 ========================================================= */
 
 const styles = {
   wrapper: {
     position: "relative",
-    height: "100vh",
-    background:
-      "linear-gradient(135deg, #f8f4ed 0%, #f5efe3 50%, #f0e8db 100%)",
+    minHeight: "100vh",
+    background: "#fffef9",
     overflow: "hidden",
   },
 
-  canvas: {
+  backgroundGradient: {
     position: "absolute",
     inset: 0,
-    opacity: 0.7,
+    background:
+      "radial-gradient(ellipse at 50% 0%, rgba(120, 194, 154, 0.15) 0%, transparent 60%), linear-gradient(180deg, #fffef9 0%, #f9fdf8 50%, #f4faf6 100%)",
+    zIndex: 0,
   },
 
-  gradientOverlay: {
+  orbContainer: {
     position: "absolute",
     inset: 0,
     pointerEvents: "none",
+    zIndex: 0,
   },
 
-  content: {
+  orb: {
+    position: "absolute",
+    borderRadius: "50%",
+    filter: "blur(80px)",
+    opacity: 0.4,
+  },
+
+  orb1: {
+    width: 500,
+    height: 500,
+    background:
+      "radial-gradient(circle, rgba(60, 139, 101, 0.3) 0%, transparent 70%)",
+    top: "-15%",
+    right: "-10%",
+  },
+
+  orb2: {
+    width: 400,
+    height: 400,
+    background:
+      "radial-gradient(circle, rgba(120, 194, 154, 0.25) 0%, transparent 70%)",
+    bottom: "-5%",
+    left: "-5%",
+  },
+
+  orb3: {
+    width: 350,
+    height: 350,
+    background:
+      "radial-gradient(circle, rgba(45, 122, 84, 0.2) 0%, transparent 70%)",
+    top: "40%",
+    left: "50%",
+  },
+
+  particleLayer: {
+    position: "absolute",
+    inset: 0,
+    pointerEvents: "none",
+    zIndex: 1,
+  },
+
+  particle: {
+    position: "absolute",
+    width: 14,
+    height: 14,
+    borderRadius: "50%",
+    background:
+      "radial-gradient(circle, rgba(60, 139, 101, 0.3), rgba(120, 194, 154, 0.15))",
+  },
+
+  desktopContent: {
     position: "relative",
-    zIndex: 2,
-    maxWidth: "1400px",
-    width: "100%",
-    height: "100%",
+    maxWidth: 1140,
     margin: "0 auto",
-    padding: "120px 48px 100px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
+    padding: "40px 60px 160px",
+    zIndex: 2,
   },
 
   eyebrow: {
-    display: "inline-block",
-    fontSize: "0.65rem",
-    letterSpacing: "0.2em",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 8,
+    fontSize: "0.7rem",
+    letterSpacing: "0.25em",
     textTransform: "uppercase",
-    color: "#8b7355",
-    marginBottom: "16px",
+    color: "#3c8b65",
     fontWeight: 600,
-    padding: "6px 16px",
-    background: "rgba(212,184,150,0.15)",
-    borderRadius: "30px",
-    backdropFilter: "blur(10px)",
+    marginBottom: 24,
+    padding: "8px 20px",
+    background: "rgba(60, 139, 101, 0.08)",
+    borderRadius: 50,
+    border: "1px solid rgba(60, 139, 101, 0.15)",
+  },
+
+  eyebrowDot: {
+    color: "#78c29a",
+    fontSize: "0.5rem",
   },
 
   title: {
-    fontSize: "clamp(2.5rem, 5.5vw, 5.5rem)",
+    fontSize: "clamp(3.2rem, 5.5vw, 6rem)",
     fontWeight: 900,
     lineHeight: 1.08,
-    marginBottom: "20px",
-    color: "#2a1f15",
+    color: "#0d2817",
+    marginBottom: 28,
     letterSpacing: "-0.02em",
   },
 
   titleAccent: {
-    background: "linear-gradient(135deg, #d4b896 0%, #8b7355 100%)",
+    position: "relative",
+    display: "inline-block",
+    background:
+      "linear-gradient(135deg, #2d7a54 0%, #3c8b65 50%, #78c29a 100%)",
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
     backgroundClip: "text",
-    display: "inline-block",
+  },
+
+  accentUnderline: {
+    position: "absolute",
+    bottom: 8,
+    left: 0,
+    right: 0,
+    height: 6,
+    background:
+      "linear-gradient(90deg, rgba(120, 194, 154, 0.3), rgba(60, 139, 101, 0.2))",
+    borderRadius: 3,
+    zIndex: -1,
   },
 
   subtitle: {
-    maxWidth: "620px",
-    fontSize: "1.05rem",
-    lineHeight: 1.7,
-    color: "#5a4a3a",
-    marginBottom: "32px",
+    maxWidth: 600,
+    fontSize: "1.15rem",
+    lineHeight: 1.8,
+    color: "#3f5f4f",
+    marginBottom: 52,
     fontWeight: 400,
   },
 
-  statsContainer: {
+  statsRow: {
     display: "flex",
-    gap: "40px",
-    marginBottom: "32px",
+    gap: 32,
+    marginBottom: 48,
     flexWrap: "wrap",
   },
 
   stat: {
-    display: "flex",
-    flexDirection: "column",
+    position: "relative",
   },
 
-  statNumber: {
-    fontSize: "2.2rem",
-    fontWeight: 800,
-    color: "#2a1f15",
-    lineHeight: 1,
-    marginBottom: "6px",
+  statCard: {
+    padding: "20px 28px",
+    background: "rgba(255, 255, 255, 0.7)",
+    backdropFilter: "blur(10px)",
+    borderRadius: 16,
+    border: "1px solid rgba(60, 139, 101, 0.12)",
+    boxShadow: "0 4px 24px rgba(60, 139, 101, 0.08)",
+    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+  },
+
+  statValue: {
+    fontSize: "2.5rem",
+    fontWeight: 900,
+    background: "linear-gradient(135deg, #0d2817, #2d7a54)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    marginBottom: 4,
   },
 
   statLabel: {
-    fontSize: "0.8rem",
-    color: "#8b7355",
+    fontSize: "0.72rem",
+    letterSpacing: "0.12em",
     textTransform: "uppercase",
-    letterSpacing: "0.1em",
+    color: "#5f8f75",
     fontWeight: 600,
   },
 
   actions: {
     display: "flex",
-    gap: "20px",
+    gap: 16,
     flexWrap: "wrap",
   },
 
-  scrollIndicator: {
-    position: "absolute",
-    bottom: "48px",
-    left: "50%",
-    transform: "translateX(-50%)",
+  mobileContent: {
+    padding: "140px 24px 100px",
+    textAlign: "center",
+    position: "relative",
+    zIndex: 2,
+  },
+
+  mobileEyebrow: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    fontSize: "0.65rem",
+    letterSpacing: "0.22em",
+    textTransform: "uppercase",
+    color: "#3c8b65",
+    fontWeight: 600,
+    marginBottom: 20,
+    padding: "6px 16px",
+    background: "rgba(60, 139, 101, 0.08)",
+    borderRadius: 50,
+    border: "1px solid rgba(60, 139, 101, 0.15)",
+  },
+
+  mobileTitle: {
+    fontSize: "2.5rem",
+    fontWeight: 900,
+    lineHeight: 1.12,
+    marginBottom: 20,
+    color: "#0d2817",
+    letterSpacing: "-0.02em",
+  },
+
+  mobileSubtitle: {
+    fontSize: "1rem",
+    lineHeight: 1.7,
+    color: "#4f6f5f",
+    marginBottom: 40,
+    fontWeight: 400,
+  },
+
+  mobileStats: {
+    display: "flex",
+    justifyContent: "space-around",
+    gap: 12,
+    marginBottom: 40,
+  },
+
+  mobileStat: {
+    flex: 1,
+  },
+
+  mobileStatCard: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-    gap: "12px",
-    zIndex: 3,
+    padding: "16px 12px",
+    background: "rgba(255, 255, 255, 0.7)",
+    backdropFilter: "blur(10px)",
+    borderRadius: 12,
+    border: "1px solid rgba(60, 139, 101, 0.12)",
+    boxShadow: "0 2px 16px rgba(60, 139, 101, 0.08)",
   },
 
-  scrollLine: {
-    width: "2px",
-    height: "40px",
-    background: "linear-gradient(180deg, transparent 0%, #8b7355 100%)",
-    borderRadius: "2px",
+  mobileStatValue: {
+    fontSize: "1.6rem",
+    fontWeight: 900,
+    background: "linear-gradient(135deg, #0d2817, #2d7a54)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    marginBottom: 4,
   },
 
-  scrollText: {
-    fontSize: "0.7rem",
-    color: "#8b7355",
-    letterSpacing: "0.15em",
+  mobileStatLabel: {
+    fontSize: "0.65rem",
+    letterSpacing: "0.08em",
     textTransform: "uppercase",
+    color: "#5f8f75",
     fontWeight: 600,
+  },
+
+  mobileActions: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 14,
+  },
+
+  waveDecor: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 120,
+    zIndex: 1,
+  },
+
+  waveSvg: {
+    width: "100%",
+    height: "100%",
   },
 };

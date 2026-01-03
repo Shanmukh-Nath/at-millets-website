@@ -11,7 +11,12 @@ export const LanguageProvider = ({ children }) => {
     localStorage.setItem("lang", lang);
   }, [lang]);
 
-  const t = (key) => translations[lang][key] || key;
+  // src/i18n/LanguageContext.jsx
+  const t = (key) => {
+    return (
+      key.split(".").reduce((obj, k) => obj?.[k], translations[lang]) || key
+    );
+  };
 
   return (
     <LanguageContext.Provider value={{ lang, setLang, t }}>

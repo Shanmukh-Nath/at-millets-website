@@ -91,7 +91,7 @@ const Header = () => {
               <Leaf size={20} />
             </div>
             <div>
-              <div style={styles.logoTitle}>AT Millets</div>
+              <div style={styles.logoTitle}>AT Millets Araku Naturals</div>
               <div style={styles.logoSub}>Tribal Heritage</div>
             </div>
           </a>
