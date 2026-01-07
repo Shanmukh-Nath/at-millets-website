@@ -35,7 +35,7 @@ export const translations = {
         stats: {
           farmers: "Farmer Families",
           varieties: "Native Varieties",
-          organic: "Organic Practices",
+          organic: "Natural Practices",
         },
         actions: {
           explore: "Explore Our Range",
@@ -416,7 +416,7 @@ export const translations = {
         items: {
           organic: {
             title: "Chemical-Free Farming",
-            text: "We promote organic and natural farming practices that protect soil health and biodiversity.",
+            text: "We promote natural farming practices that protect soil health and biodiversity.",
           },
           water: {
             title: "Water Conservation",
