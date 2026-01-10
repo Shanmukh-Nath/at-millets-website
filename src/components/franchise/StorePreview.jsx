@@ -5,7 +5,8 @@ import { useLanguage } from "../../i18n/LanguageContext";
 const StorePreview = () => {
   const { t } = useLanguage();
   const isMobile = useMediaQuery({ maxWidth: 768 });
-  const shopImage = "https://cdn.atmillets.com/media/images/shop_no_bg.png";
+  const shopImage =
+    "https://cdn.atmillets.com/media/images/at-millets-new-shop.png";
 
   return (
     <section

@@ -14,10 +14,11 @@ import {
 } from "lucide-react";
 
 import { useLanguage } from "../../i18n/LanguageContext";
-import logo from "../../assets/images/logo.png";
 
 const Header = () => {
   const { lang, setLang, t } = useLanguage();
+
+  const logo = "https://cdn.atmillets.com/media/images/logo.png";
 
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isDesktop = useMediaQuery({ minWidth: 769 });
