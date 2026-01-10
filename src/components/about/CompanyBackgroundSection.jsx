@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "../../i18n/LanguageContext";
-import arakuImage from "../../assets/images/tribal_farmers.jpg";
 
 /* =========================================================
    COMPANY BACKGROUND – ABOUT US
@@ -16,6 +15,9 @@ const CompanyBackgroundSection = () => {
 
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1023 });
+
+  const arakuImage =
+    "https://cdn.atmillets.com/media/images/tribal_farmers.jpg";
 
   return (
     <section style={styles.wrapper}>

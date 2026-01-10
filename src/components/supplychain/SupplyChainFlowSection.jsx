@@ -2,8 +2,6 @@ import { motion } from "framer-motion";
 import { useLanguage } from "../../i18n/LanguageContext";
 import { useMediaQuery } from "react-responsive";
 
-import SupplyChainSvg from "../../assets/illustrations/supply-chain-flow.svg";
-
 /* =========================================================
    SUPPLY CHAIN FLOW – ANIMATED VISUAL
 ========================================================= */
@@ -11,7 +9,8 @@ import SupplyChainSvg from "../../assets/illustrations/supply-chain-flow.svg";
 const SupplyChainFlowSection = () => {
   const { t } = useLanguage();
   const isMobile = useMediaQuery({ maxWidth: 767 });
-
+  const SupplyChainSvg =
+    "https://cdn.atmillets.com/media/illustrations/supply-chain-flow.svg";
   const steps = [
     {
       key: "procurement",

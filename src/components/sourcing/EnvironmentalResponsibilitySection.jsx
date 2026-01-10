@@ -3,8 +3,6 @@ import { useLanguage } from "../../i18n/LanguageContext";
 import { Leaf, Droplets, Recycle, TreePine } from "lucide-react";
 import { useMediaQuery } from "react-responsive";
 
-import environmentImage from "../../assets/images/environmental_responsibility.jpg";
-
 /* =========================================================
    ENVIRONMENTAL RESPONSIBILITY
 ========================================================= */
@@ -12,6 +10,8 @@ import environmentImage from "../../assets/images/environmental_responsibility.j
 const EnvironmentalResponsibilitySection = () => {
   const { t } = useLanguage();
   const isDesktop = useMediaQuery({ minWidth: 1024 });
+  const environmentImage =
+    "https://cdn.atmillets.com/media/images/environmental_responsibility.jpg";
 
   const items = [
     {

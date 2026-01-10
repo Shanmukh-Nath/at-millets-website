@@ -3,11 +3,6 @@ import { ShieldCheck, Leaf, Microscope, Handshake } from "lucide-react";
 import { useLanguage } from "../../i18n/LanguageContext";
 
 /* === IMPORT CERTIFICATION IMAGES === */
-import fssaiImg from "../../assets/images/FSSAI_logo.png";
-import organicImg from "../../assets/images/np.png";
-import labImg from "../../assets/images/lab_tested.png";
-import gmpImg from "../../assets/images/good_manufacturing_practices.png";
-import traceImg from "../../assets/images/traceable_supply_chain.png";
 
 /* =========================================================
    TRUST & CERTIFICATIONS SECTION
@@ -15,6 +10,9 @@ import traceImg from "../../assets/images/traceable_supply_chain.png";
 
 const TrustSection = () => {
   const { t } = useLanguage();
+  const fssaiImg = "https://cdn.atmillets.com/media/images/FSSAI_logo.png";
+  const organicImg = "https://cdn.atmillets.com/media/images/np.png";
+  const labImg = "https://cdn.atmillets.com/media/images/lab_tested.png";
 
   const pillars = [
     {

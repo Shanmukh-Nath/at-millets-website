@@ -3,13 +3,13 @@ import { useLanguage } from "../../i18n/LanguageContext";
 import { useState, useRef, useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 
-import farmer1 from "../../assets/images/tribal_farmer_1.jpg";
-import farmer2 from "../../assets/images/tribal_farmer_2.jpg";
-import millet from "../../assets/images/millets_closeup.jpg";
-
 /* =========================================================
    DIRECT TRIBAL SOURCING SECTION
 ========================================================= */
+
+const farmer1 = "https://cdn.atmillets.com/media/images/tribal_farmer_1.jpg";
+const farmer2 = "https://cdn.atmillets.com/media/images/tribal_farmer_2.jpg";
+const millet = "https://cdn.atmillets.com/media/images/millets_closeup.jpg";
 
 const IMAGES = [
   { id: 1, src: farmer1 },

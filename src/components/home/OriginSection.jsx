@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useLanguage } from "../../i18n/LanguageContext";
 import { Trees, HeartHandshake, Brain } from "lucide-react";
-import arakuImg from "../../assets/images/araku_valley.jpg";
 
 /* =========================================================
    BREAKPOINT HOOK
@@ -30,6 +29,7 @@ const useBreakpoint = () => {
 const OriginSection = () => {
   const { isMobile, isTablet } = useBreakpoint();
   const { t } = useLanguage();
+  const arakuImg = "https://cdn.atmillets.com/media/images/araku_valley.jpg";
 
   return (
     <section style={styles.wrapper}>

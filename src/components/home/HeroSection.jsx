@@ -2,7 +2,6 @@ import { motion, useInView } from "framer-motion";
 import { useMediaQuery } from "react-responsive";
 import { useRef } from "react";
 import { useLanguage } from "../../i18n/LanguageContext";
-import heroVideoWebm from "../../assets/videos/hero-bg.webm";
 import { useNavigate } from "react-router-dom";
 
 // Mock Button component
@@ -60,28 +59,46 @@ const HeroSection = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
 
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  const saveData = navigator.connection && navigator.connection.saveData;
+
+  const shouldPlayVideo = !prefersReducedMotion && !saveData;
+
+  const desktopVideo = "https://cdn.atmillets.com/media/videos/hero-bg.webm";
+
+  const mobileVideo = "https://cdn.atmillets.com/media/videos/hero-bg-720.webm";
+
+  const videoSrc = isMobile ? mobileVideo : desktopVideo;
+
   return (
     <section style={styles.wrapper} data-dark>
       {/* ================= VIDEO BACKGROUND ================= */}
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          zIndex: 1,
-          pointerEvents: "none",
-        }}
-      >
-        <source src={heroVideoWebm} type="video/webm" />
-      </video>
-      {/* Video overlay for contrast */}
+      {shouldPlayVideo && (
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster="https://cdn.atmillets.com/media/videos/hero-bg-poster.jpg"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            zIndex: 1,
+            pointerEvents: "none",
+          }}
+        >
+          <source src={videoSrc} type="video/webm" />
+        </video>
+      )}
+
+      {/* Overlay for readability */}
       <div
         style={{
           position: "absolute",
@@ -93,7 +110,6 @@ const HeroSection = () => {
         }}
       />
 
-      {/* Layered backgrounds */}
       <div style={styles.backgroundGradient} />
       <FloatingOrbs />
       <ParticleBackground />
@@ -104,7 +120,6 @@ const HeroSection = () => {
         <DesktopHero t={t} navigate={navigate} />
       )}
 
-      {/* Bottom wave decoration */}
       <div style={styles.waveDecor}>
         <svg
           viewBox="0 0 1200 120"

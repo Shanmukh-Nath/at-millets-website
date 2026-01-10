@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useMediaQuery } from "react-responsive";
 import { useLanguage } from "../../i18n/LanguageContext";
-import heroImage from "../../assets/images/sunset_shop.png";
 import { TrendingUp, Users, Award } from "lucide-react";
 
 const BusinessHero = () => {
@@ -11,6 +10,8 @@ const BusinessHero = () => {
 
   const highlights =
     t("business.hero.highlights", { returnObjects: true }) || [];
+
+  const heroImage = "https://cdn.atmillets.com/media/images/sunset_shop.png";
 
   return (
     <section style={styles.wrapper} data-dark>

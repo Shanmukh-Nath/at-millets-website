@@ -1,9 +1,6 @@
 import { motion } from "framer-motion";
 import { useMediaQuery } from "react-responsive";
 import { useLanguage } from "../../i18n/LanguageContext";
-import soilImage from "../../assets/images/soil_health.jpg";
-import waterImage from "../../assets/images/water_conservation.jpg";
-import farmersImage from "../../assets/images/sustainable_farming.jpg";
 
 /* =========================================================
    COMMITMENT TO SUSTAINABILITY (RESPONSIVE)
@@ -13,6 +10,13 @@ const CommitmentSustainabilitySection = () => {
   const { t } = useLanguage();
   const isTablet = useMediaQuery({ maxWidth: 1024 });
   const isMobile = useMediaQuery({ maxWidth: 768 });
+
+  // CDN IMAGE PATHS (no local assets)
+  const soilImage = "https://cdn.atmillets.com/media/images/soil_health.jpg";
+  const waterImage =
+    "https://cdn.atmillets.com/media/images/water_conservation.jpg";
+  const farmersImage =
+    "https://cdn.atmillets.com/media/images/sustainable_farming.jpg";
 
   return (
     <section style={styles.wrapper}>
@@ -41,23 +45,31 @@ const CommitmentSustainabilitySection = () => {
           <img
             src={soilImage}
             alt={t("about.sustainability.images.soil")}
+            loading="lazy"
+            decoding="async"
             style={{
               ...styles.imageLarge,
               height: isMobile ? 260 : 460,
               gridRow: isMobile ? "auto" : "span 2",
             }}
           />
+
           <img
             src={waterImage}
             alt={t("about.sustainability.images.water")}
+            loading="lazy"
+            decoding="async"
             style={{
               ...styles.imageSmall,
               height: isMobile ? 200 : 220,
             }}
           />
+
           <img
             src={farmersImage}
             alt={t("about.sustainability.images.farmers")}
+            loading="lazy"
+            decoding="async"
             style={{
               ...styles.imageSmall,
               height: isMobile ? 200 : 220,
@@ -129,7 +141,6 @@ const CommitmentSustainabilitySection = () => {
 };
 
 export default CommitmentSustainabilitySection;
-
 /* =========================================================
    STYLES (UNCHANGED CORE)
 ========================================================= */

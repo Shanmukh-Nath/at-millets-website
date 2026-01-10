@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { useLanguage } from "../../i18n/LanguageContext";
 import { useMediaQuery } from "react-responsive";
 import { Mountain, Leaf, HeartPulse } from "lucide-react";
-import arakuImage from "../../assets/images/araku_valley.jpg";
 
 /* =========================================================
    WHY ARAKU & MILLETS
@@ -12,6 +11,7 @@ const WhyArakuMilletsSection = () => {
   const { t } = useLanguage();
 
   const isMobile = useMediaQuery({ maxWidth: 767 });
+  const arakuImage = "https://cdn.atmillets.com/media/images/araku_valley.jpg";
 
   return (
     <section style={styles.wrapper}>

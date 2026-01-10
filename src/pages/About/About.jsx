@@ -4,11 +4,14 @@ import VisionMissionSection from "../../components/about/VisionMissionSection";
 import WhyArakuMilletsSection from "../../components/about/WhyArakuMilletsSection";
 import CommitmentSustainabilitySection from "../../components/about/CommitmentSustainabilitySection";
 import Leaders from "../../components/about/Leaders";
-import krishna from "../../assets/images/founders/krishna.jpeg";
-import raghavendra from "../../assets/images/founders/raghavendra.jpeg";
-import raghuram from "../../assets/images/founders/raghuram.jpeg";
-import kavitha from "../../assets/images/founders/kavitha.jpeg";
-import amara from "../../assets/images/founders/amara.jpeg";
+
+const krishna = "https://cdn.atmillets.com/media/images/founders/krishna.jpeg";
+const raghavendra =
+  "https://cdn.atmillets.com/media/images/founders/raghavendra.jpeg";
+const raghuram =
+  "https://cdn.atmillets.com/media/images/founders/raghuram.jpeg";
+const kavitha = "https://cdn.atmillets.com/media/images/founders/kavitha.jpeg";
+const amara = "https://cdn.atmillets.com/media/images/founders/amara.jpeg";
 
 const leadersData = [
   {

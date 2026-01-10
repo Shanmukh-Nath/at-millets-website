@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "../../i18n/LanguageContext";
 import { useMediaQuery } from "react-responsive";
-import tribalImage from "../../assets/images/tribal_sourcing_hero.jpg";
 
 /* =========================================================
    TRIBAL SOURCING – HERO SECTION (RESPONSIVE)
@@ -9,7 +8,8 @@ import tribalImage from "../../assets/images/tribal_sourcing_hero.jpg";
 
 const TribalSourcingHeroSection = () => {
   const { t } = useLanguage();
-
+  const tribalImage =
+    "https://cdn.atmillets.com/media/images/tribal_sourcing_hero.jpg";
   // 🔹 Breakpoints using react-responsive
   const isDesktop = useMediaQuery({ minWidth: 1024 });
   const isTabletOrMobile = useMediaQuery({ maxWidth: 1023 });

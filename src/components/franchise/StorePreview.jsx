@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { useMediaQuery } from "react-responsive";
 import { useLanguage } from "../../i18n/LanguageContext";
-import shopImage from "../../assets/images/shop_no_bg.png";
 
 const StorePreview = () => {
   const { t } = useLanguage();
   const isMobile = useMediaQuery({ maxWidth: 768 });
+  const shopImage = "https://cdn.atmillets.com/media/images/shop_no_bg.png";
 
   return (
     <section

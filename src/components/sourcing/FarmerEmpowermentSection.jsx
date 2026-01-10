@@ -3,8 +3,6 @@ import { useLanguage } from "../../i18n/LanguageContext";
 import { Users, GraduationCap, TrendingUp, HeartHandshake } from "lucide-react";
 import { useMediaQuery } from "react-responsive";
 
-import empowermentImage from "../../assets/images/farmer_empowerment.png";
-
 /* =========================================================
    FARMER EMPOWERMENT & FAIR TRADE (RESPONSIVE FIXED)
 ========================================================= */
@@ -15,6 +13,9 @@ const FarmerEmpowermentSection = () => {
   const isDesktop = useMediaQuery({ minWidth: 1024 });
   const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1023 });
   const isMobile = useMediaQuery({ maxWidth: 767 });
+
+  const empowermentImage =
+    "https://cdn.atmillets.com/media/images/farmer_empowerment.png";
 
   const items = [
     {
