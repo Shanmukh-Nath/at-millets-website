@@ -6,6 +6,7 @@ export const translations = {
   EN: {
     /* ===== HEADER (UNCHANGED) ===== */
     nav: {
+      home: "Home",
       company: "Company",
       products: "Products",
       business: "Business",
@@ -655,6 +656,7 @@ export const translations = {
 
   TE: {
     nav: {
+      home: "హోమ్",
       company: "కంపెనీ",
       products: "ఉత్పత్తులు",
       business: "వ్యాపారం",
@@ -1302,6 +1304,7 @@ export const translations = {
 
   HI: {
     nav: {
+      home: "होम",
       company: "कंपनी",
       products: "उत्पाद",
       business: "व्यवसाय",

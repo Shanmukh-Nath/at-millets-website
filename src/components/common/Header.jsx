@@ -10,6 +10,7 @@ import {
   X,
   ArrowRight,
   Globe,
+  Home,
 } from "lucide-react";
 
 import { useLanguage } from "../../i18n/LanguageContext";
@@ -27,6 +28,22 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
 
   const [onDarkBg, setOnDarkBg] = useState(false);
+  const [isHomePage, setIsHomePage] = useState(true);
+
+  // Check if current page is home
+  useEffect(() => {
+    const checkHomePage = () => {
+      setIsHomePage(
+        window.location.pathname === "/" ||
+          window.location.pathname === "/index.html"
+      );
+    };
+
+    checkHomePage();
+    window.addEventListener("popstate", checkHomePage);
+
+    return () => window.removeEventListener("popstate", checkHomePage);
+  }, []);
 
   const getLangLabel = (code) => {
     switch (code) {
@@ -162,6 +179,21 @@ const Header = () => {
           {/* DESKTOP NAV */}
           {isDesktop && (
             <nav style={styles.nav}>
+              {/* HOME BUTTON */}
+              {!isHomePage && (
+                <a
+                  href="/"
+                  style={{
+                    ...styles.homeButton,
+                    color: headerTheme.text,
+                    border: `1px solid ${headerTheme.border}`,
+                  }}
+                >
+                  <Home size={16} />
+                  <span>{t("nav.home") || "Home"}</span>
+                </a>
+              )}
+
               {Object.entries(navigationData).map(([key, data]) => {
                 const Icon = data.icon;
                 return (
@@ -299,6 +331,27 @@ const Header = () => {
             transition={{ duration: 0.25 }}
             style={styles.mobileMenu}
           >
+            {/* HOME BUTTON IN MOBILE */}
+            {!isHomePage && (
+              <div style={styles.mobileSection}>
+                <a
+                  href="/"
+                  style={{
+                    ...styles.mobileLink,
+                    fontWeight: 700,
+                    color: "#2f6f4e",
+                  }}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <Home
+                    size={16}
+                    style={{ display: "inline", marginRight: 6 }}
+                  />
+                  {t("nav.home") || "Home"}
+                </a>
+              </div>
+            )}
+
             {Object.values(navigationData).map((section) => (
               <div key={section.label} style={styles.mobileSection}>
                 <div style={styles.mobileHeader}>{section.label}</div>
@@ -379,7 +432,12 @@ const styles = {
   logoTitle: { fontWeight: 700, fontSize: 15 },
   logoSub: { fontSize: 12, fontWeight: 600 },
 
-  nav: { display: "flex", justifyContent: "center", gap: 24 },
+  nav: {
+    display: "flex",
+    justifyContent: "center",
+    gap: 24,
+    alignItems: "center",
+  },
   navWrapper: { position: "relative" },
   navButton: {
     display: "flex",
@@ -389,6 +447,19 @@ const styles = {
     border: "none",
     cursor: "pointer",
     fontWeight: 600,
+  },
+
+  homeButton: {
+    display: "flex",
+    gap: 6,
+    alignItems: "center",
+    background: "transparent",
+    border: "1px solid rgba(0,0,0,0.12)",
+    borderRadius: 10,
+    padding: "6px 12px",
+    textDecoration: "none",
+    fontWeight: 600,
+    transition: "all 0.2s ease",
   },
 
   dropdown: {
