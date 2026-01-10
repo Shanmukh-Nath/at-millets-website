@@ -6,7 +6,7 @@ const StorePreview = () => {
   const { t } = useLanguage();
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const shopImage =
-    "https://cdn.atmillets.com/media/images/at-millets-new-shop.png";
+    "https://cdn.atmillets.com/media/images/at-millets-new-shop.webp";
 
   return (
     <section
