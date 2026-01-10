@@ -6,6 +6,7 @@ import {
   FaYoutube as Youtube,
   FaFacebookF as Facebook,
   FaInstagram as Instagram,
+  FaLinkedinIn as Linkedin,
 } from "react-icons/fa";
 
 import { FaXTwitter as Twitter } from "react-icons/fa6";
@@ -208,6 +209,12 @@ const Footer = () => {
               style={styles.twitter}
               icon={<Twitter size={22} />}
               label="Twitter"
+            />
+            <SocialLink
+              href="https://www.linkedin.com/company/at-millets-araku-naturals/"
+              style={styles.linkedin}
+              icon={<Linkedin size={22} />}
+              label="LinkedIn"
             />
           </div>
         </motion.div>
@@ -433,6 +440,10 @@ const styles = {
 
   twitter: {
     background: "black",
+  },
+
+  linkedin: {
+    background: "#0A66C2",
   },
 
   bottomBar: {
