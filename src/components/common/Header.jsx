@@ -354,9 +354,9 @@ const Header = () => {
         {/* ===== MOBILE LANGUAGE BAR (ATTACHED) ===== */}
         {isMobile && (
           <div style={styles.mobileLangBar}>
-            <LangPill code="EN" label="EN" />
-            <LangPill code="TE" label="తెల" />
-            <LangPill code="HI" label="हि" />
+            <LangPill code="EN" label="EN" onDarkBg={onDarkBg} />
+            <LangPill code="TE" label="తెల" onDarkBg={onDarkBg} />
+            <LangPill code="HI" label="हि" onDarkBg={onDarkBg} />
           </div>
         )}
       </motion.header>
@@ -484,14 +484,45 @@ const leafHover = {
 };
 
 /* ===== LANGUAGE PILL ===== */
-const LangPill = ({ code, label }) => {
+const LangPill = ({ code, label, onDarkBg }) => {
   const { lang, setLang } = useLanguage();
+  const isActive = lang === code;
+
+  const baseStyle = {
+    padding: "4px 12px",
+    fontSize: 13,
+    fontWeight: 700,
+    borderRadius: 999,
+    cursor: "pointer",
+    transition: "all 0.25s ease",
+  };
+
+  const lightMode = {
+    border: "2px solid rgba(0,0,0,0.5)",
+    background: "transparent",
+    color: "#2f6f4e",
+  };
+
+  const darkMode = {
+    border: "2px solid rgba(255,255,255,0.6)",
+    background: "rgba(255,255,255,0.12)",
+    color: "#ffffff",
+  };
+
+  const activeStyle = {
+    background: "linear-gradient(135deg,#2f6f4e,#3c8b65)",
+    color: "#ffffff",
+    border: "none",
+    boxShadow: "0 6px 16px rgba(47,111,78,0.35)",
+  };
+
   return (
     <button
       onClick={() => setLang(code)}
       style={{
-        ...styles.langPill,
-        ...(lang === code ? styles.langPillActive : {}),
+        ...baseStyle,
+        ...(onDarkBg ? darkMode : lightMode),
+        ...(isActive ? activeStyle : {}),
       }}
     >
       {label}
