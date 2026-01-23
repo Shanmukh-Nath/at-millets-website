@@ -398,7 +398,7 @@ const Header = () => {
                 onClick={() => setMobileOpen(false)}
                 style={{
                   ...styles.mobileActionSecondary,
-                  color: headerTheme.text,
+                  color: "black",
                   border: `1px solid ${headerTheme.border}`,
                 }}
               >
